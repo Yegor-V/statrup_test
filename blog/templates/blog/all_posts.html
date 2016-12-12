@@ -1,0 +1,49 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                {% for post in posts %}
+                    <h3>{{ post.title }}</h3>
+                    {% if post.user == current_user %}
+                        <span class="label label-default">My post</span>
+                    {% elif post.id not in read_list %}
+                        <span class="label label-success">New</span>
+                    {% else %}
+                        <span class="label label-info">Read</span>
+                    {% endif %}
+                    <p>
+                        Author: {{ post.user }}<br>
+                        Date Created: {{ post.date_created }}<br>
+                        {{ post.text_start }}
+                        <a href="{% url 'post-details' post.pk %}">Read more...</a>
+                    </p>
+                {% endfor %}
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {% if posts|length > 5 %}
+        <div class="container-fluid panel-footer">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-xs-12 col-sm-7">
+                    <br>
+                    <p class="text-muted">Blog</p>
+                    <br>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <br>
+                    <p class="text-muted">Copyright 2016</p>
+                    <br>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
+{% endblock %}

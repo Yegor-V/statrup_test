@@ -1,0 +1,59 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <h1>{{ post.title }}</h1>
+                {% if post.user == current_user %}
+                    <span class="label label-default">My post</span>
+                {% else %}
+                    {% if post.id not in read_list %}
+                        <form method="post" class="form-horizontal" action="{% url 'mark-as-read' %}">
+                            <span class="label label-success">New</span>
+                            {% csrf_token %}
+                            <button class="btn btn-xs btn-default" type="submit" value="{{ post.id }}"
+                                    name="mark_as_read">
+                                Mark as read
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="label label-info">Read</span>
+                    {% endif %}
+                {% endif %}
+                <p>Published: {{ post.date_created }}</p>
+                {% if post.user != current_user %}
+                    {% if post.user.id not in subscriptions %}
+                        <form method="post" class="form-horizontal" action="{% url 'subscribe' %}">
+                            Author: {{ post.user.username }}
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <button class="btn btn-xs btn-success" type="submit" value="{{ post.user }}" name="subscribe">
+                                Subscribe
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="post" class="form-horizontal" action="{% url 'unsubscribe' %}">
+                            Author: {{ post.user.username }}
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <button class="btn btn-xs btn-primary" type="submit" value="{{ post.user }}"
+                                    name="unsubscribe">
+                                Unsubscribe
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                <p>{{ post.text }}</p>
+
+
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
